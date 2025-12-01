@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Downloads — Drive</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      :root{
+        --bg:#f7fafc;
+        --card:#ffffff;
+        --muted:#6b7280;
+        --accent:#0366d6;
+        --accent-2:#064e9b;
+        --radius:12px;
+        --shadow: 0 6px 18px rgba(15,23,42,0.06);
+      }
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background:var(--bg);
+        color:#0f172a;
+        -webkit-font-smoothing:antialiased;
+      }
+
+      .wrap{
+        max-width:1100px;
+        margin:28px auto;
+        padding:20px;
+      }
+
+      header {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        margin-bottom:18px;
+      }
+      header h1{
+        margin:0;
+        font-size:20px;
+        font-weight:600;
+        letter-spacing:-0.2px;
+      }
+      header p { margin:0; color:var(--muted); font-size:14px; }
+
+      .controls {
+        display:flex;
+        gap:8px;
+        align-items:center;
+      }
+      .search {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        background:#fff;
+        border-radius:999px;
+        padding:8px 12px;
+        box-shadow: var(--shadow);
+      }
+      .search input{
+        border:0;
+        outline:0;
+        width:220px;
+        font-size:14px;
+      }
+      .btn {
+        background:var(--accent);
+        color:#fff;
+        padding:8px 12px;
+        border-radius:8px;
+        text-decoration:none;
+        font-weight:600;
+        display:inline-flex;
+        gap:8px;
+        align-items:center;
+      }
+      .btn.secondary{
+        background:transparent;
+        color:var(--accent);
+        border:1px solid rgba(3,102,214,0.12);
+        font-weight:600;
+      }
+
+      /* grid */
+      .grid {
+        display:grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap:14px;
+      }
+
+      .card {
+        background:var(--card);
+        border-radius:var(--radius);
+        padding:14px;
+        display:flex;
+        gap:12px;
+        align-items:center;
+        box-shadow: var(--shadow);
+      }
+      .file-thumb{
+        width:56px;
+        height:56px;
+        border-radius:8px;
+        background:linear-gradient(180deg, #eef6ff, #e3f0ff);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        color:var(--accent-2);
+        flex-shrink:0;
+      }
+      .meta{
+        flex:1;
+        min-width:0;
+      }
+      .meta .name{
+        font-weight:600;
+        font-size:15px;
+        margin-bottom:6px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+      .meta .sub{
+        color:var(--muted);
+        font-size:13px;
+      }
+
+      .actions{
+        display:flex;
+        gap:8px;
+        align-items:center;
+      }
+
+      footer{ text-align:center; margin-top:18px; color:var(--muted); font-size:13px; }
+
+      /* responsive tweaks */
+      @media (max-width:520px){
+        .search input{ width:120px; }
+        header h1{ font-size:18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>Downloads</h1>
+          <p>All uploaded files — click Download to save a copy.</p>
+        </div>
+
+        <div class="controls">
+          <div class="search" role="search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M21 21l-4.35-4.35" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="11" cy="11" r="5" stroke="#94a3b8" stroke-width="1.6"/>
+            </svg>
+            <input id="search" placeholder="Search files..." oninput="filterFiles()" />
+          </div>
+
+          <!-- adjust link prefix if your fileRoutes is mounted differently -->
+          <a class="btn" href="/">Home</a>
+        </div>
+      </header>
+
+      <!-- grid of files -->
+      <section id="filesGrid" class="grid">
+        <% if (!files || files.length === 0) { %>
+          <div style="grid-column:1/-1; text-align:center; padding:36px; border-radius:12px; background:#fff; box-shadow:var(--shadow);">
+            <p style="margin:0 0 8px; font-weight:600">No files yet</p>
+            <p style="margin:0; color:var(--muted)">Upload files from the home page to see them here.</p>
+          </div>
+        <% } else { %>
+          <% files.forEach(function(file) { %>
+            <article class="card" data-name="<%= (file.originalName || file.filename || '').toLowerCase() %>">
+              <div class="file-thumb" aria-hidden>
+                <!-- show file type initial or generic icon -->
+                <% 
+                  const ext = (file.originalName || file.filename || '').split('.').pop().toLowerCase();
+                  let initial = (file.originalName || file.filename || '').slice(0,1).toUpperCase();
+                %>
+                <% if (['png','jpg','jpeg','gif','svg'].includes(ext)) { %>
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M21 19V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 15l-5-5-3 3-4-4L3 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <% } else if (['pdf'].includes(ext)) { %>
+                  <span style="font-size:18px; color:var(--accent-2)">PDF</span>
+                <% } else { %>
+                  <span style="font-size:20px"><%= initial %></span>
+                <% } %>
+              </div>
+
+              <div class="meta">
+                <div class="name" title="<%= file.originalName || file.filename %>">
+                  <%= file.originalName || file.filename %>
+                </div>
+                <div class="sub">
+                  <span><%= ((file.size || 0) / 1024).toFixed(1) %> KB</span>
+                  <% if (file.createdAt) { %>
+                    <span> • <%= new Date(file.createdAt).toLocaleString() %></span>
+                  <% } %>
+                  <% if (file.mimeType) { %>
+                    <span> • <%= file.mimeType %></span>
+                  <% } %>
+                </div>
+              </div>
+
+              <div class="actions">
+                <!-- public download link (change prefix if needed) -->
+                <a class="btn secondary" href="/api/files/public/<%= file.filename %>" download>
+                  <!-- download icon -->
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path d="M12 3v12" stroke="#0366d6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 11l4 4 4-4" stroke="#0366d6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 21H3" stroke="#0366d6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Download
+                </a>
+              </div>
+            </article>
+          <% }) %>
+        <% } %>
+      </section>
+
+      <footer>
+        <small>Uploaded files are served from your server's <code>/uploads</code> folder.</small>
+      </footer>
+    </div>
+
+    <script>
+      function filterFiles(){
+        const q = (document.getElementById('search').value || '').trim().toLowerCase();
+        document.querySelectorAll('#filesGrid article').forEach(a=>{
+          const name = a.getAttribute('data-name') || '';
+          a.style.display = name.includes(q) ? '' : 'none';
+        });
+      }
+    </script>
+  </body>
+</html>

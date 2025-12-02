@@ -55,27 +55,27 @@ Drive
 
 ### Installation & Setup
 
-# 1. Initialize npm & create package.json
+ 1. Initialize npm & create package.json
 npm init -y
 
-# 2. Install dependencies your project needs:
+ 2. Install dependencies your project needs:
 npm install express mongoose dotenv jsonwebtoken bcrypt multer ejs
 
-# 3. (Optional but useful) Install a dev-dependency like nodemon for development auto-restarts
+ 3. (Optional but useful) Install a dev-dependency like nodemon for development auto-restarts
 npm install --save-dev nodemon
 
-# 4. Update package.json “scripts” section — for example:
+ 4. Update package.json “scripts” section — for example:
 
-# (you can open package.json, find "scripts", and replace or add:)
-# "scripts": {
-#   "start": "node app.js",
-#   "dev": "nodemon app.js"
-# }
+ (you can open package.json, find "scripts", and replace or add:)
+ "scripts": {
+   "start": "node app.js",
+   "dev": "nodemon app.js"
+ }
 
-# 5. After cloning or pulling project later, install dependencies:
+5. After cloning or pulling project later, install dependencies:
 npm install
 
-# 6. To run server in production mode:
+6. To run server in production mode:
 npm start
 
 #Then open your browser at:
